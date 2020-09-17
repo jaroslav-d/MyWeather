@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyWeather</string>
+    <string name="search">Search</string>
+    <string name="content_description_search">Search City</string>
+    <string name="label_search_text_input">Search City</string>
+    <string name="prefix_celsius_degree">\u2103</string>
+</resources>

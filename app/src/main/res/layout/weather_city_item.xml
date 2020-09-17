@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+
+        <variable
+            name="weather"
+            type="com.example.myweather.db.entity.Weather" />
+    </data>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/icon_weather_item"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:icon_web="@{weather.icon}"
+            tool:src="@drawable/ic_search_24dp" />
+
+        <TextView
+            android:id="@+id/city_weather_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".1"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:text="@{weather.city}"
+            tool:text="M" />
+
+        <TextView
+            android:id="@+id/temperature_weather_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".1"
+            android:gravity="end"
+            android:textSize="20sp"
+            android:text="@{String.valueOf(weather.temperature)}"
+            tool:text="30"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".02"
+            android:gravity="start"
+            android:text="@string/prefix_celsius_degree"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+</layout>

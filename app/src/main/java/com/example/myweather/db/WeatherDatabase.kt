@@ -17,8 +17,8 @@ abstract class WeatherDatabase : RoomDatabase() {
 
     private class WeatherDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
 
-        override fun onOpen(db: SupportSQLiteDatabase) {
-            super.onOpen(db)
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
                     var weatherDao = database.weatherDao()
@@ -51,6 +51,7 @@ abstract class WeatherDatabase : RoomDatabase() {
                     weatherDao.insert(weather)
                 }
             }
+
         }
     }
 

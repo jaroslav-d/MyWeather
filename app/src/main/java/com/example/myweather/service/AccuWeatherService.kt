@@ -1,5 +1,6 @@
 package com.example.myweather.service
 
+import androidx.lifecycle.LiveData
 import com.example.myweather.service.models.CityInfo
 import com.example.myweather.service.models.CurrentConditionCity
 import retrofit2.Retrofit

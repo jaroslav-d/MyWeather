@@ -29,17 +29,23 @@
             android:id="@+id/city_weather_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".1"
-            android:gravity="center"
+            android:gravity="start"
+            android:layout_marginStart="5dp"
             android:textSize="20sp"
             android:text="@{weather.city}"
-            tool:text="M" />
+            tool:text="Набережные Челны" />
+
+
+        <View
+            android:background="@android:color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"/>
 
         <TextView
             android:id="@+id/temperature_weather_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".1"
             android:gravity="end"
             android:textSize="20sp"
             android:text="@{String.valueOf(weather.temperature)}"
@@ -48,8 +54,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".02"
-            android:gravity="start"
+            android:layout_marginEnd="30dp"
+            android:gravity="end"
             android:text="@string/prefix_celsius_degree"
             android:textSize="20sp"/>
 

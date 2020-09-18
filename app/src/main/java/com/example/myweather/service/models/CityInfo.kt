@@ -6,7 +6,7 @@ data class CityInfo(
     @SerializedName("Key")
     val key : String,
     @SerializedName("LocalizedName")
-    val localizedName : String,
+    val name : String,
     @SerializedName("Country")
     val country : Country,
     @SerializedName("AdministrativeArea")

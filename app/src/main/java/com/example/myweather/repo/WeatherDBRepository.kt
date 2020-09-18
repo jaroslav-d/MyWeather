@@ -1,12 +1,12 @@
 package com.example.myweather.repo
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.myweather.db.dao.WeatherDao
 import com.example.myweather.db.entity.Weather
 import com.example.myweather.db.entity.WeatherUpdate
 import com.example.myweather.service.AccuWeatherService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.example.myweather.service.models.CityInfo
 import java.lang.Exception
 
 class WeatherDBRepository(private val weatherDao: WeatherDao) {
@@ -15,13 +15,12 @@ class WeatherDBRepository(private val weatherDao: WeatherDao) {
 
     private val mapOptionsConditions : Map<String, String> =
         mapOf(
-            "apikey" to "0A65HI9CGsZS4efGjxLB2Oi7prM63JSj",
+            "apikey" to "SfFungljqxhY3vX5cVyeQGrOchjM2nkG",
             "language" to "ru"
         )
-    private val mapOptionsSearch : Map<String, String> =
-        mapOf(
-            "apikey" to "0A65HI9CGsZS4efGjxLB2Oi7prM63JSj",
-            "q" to "казань",
+    private val mapOptionsSearch : MutableMap<String, String> =
+        mutableMapOf(
+            "apikey" to "SfFungljqxhY3vX5cVyeQGrOchjM2nkG",
             "language" to "ru"
         )
     val weather : LiveData<List<Weather>> = weatherDao.getWeather()
@@ -31,13 +30,18 @@ class WeatherDBRepository(private val weatherDao: WeatherDao) {
         weatherDao.insert(weather)
     }
 
+    suspend fun getCities(text : String) : List<CityInfo> {
+        mapOptionsSearch["q"] = text
+        return service.searchCity(mapOptionsSearch)
+    }
+
     suspend fun update(weather: WeatherUpdate) {
         weatherDao.update(weather)
     }
 
     suspend fun refreshData() {
-        val keys = weatherDao.getKeys()
         try {
+            val keys = weatherDao.getKeys()
             for (key in keys) {
                 val curCon = service.getCurrentCondition(key, mapOptionsConditions).first()
                 val icon : String = curCon.weatherIcon
@@ -46,7 +50,7 @@ class WeatherDBRepository(private val weatherDao: WeatherDao) {
                 update(WeatherUpdate(key,icon,text,temperature))
             }
         } catch (cause : Throwable) {
-            throw Exception("Unable to refresh view")
+            Log.d(TAG,"Error")
         }
     }
 }

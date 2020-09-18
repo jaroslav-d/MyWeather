@@ -6,10 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myweather.R
+import com.example.myweather.adapters.MyBindingComponent
+import com.example.myweather.databinding.SearchCityItemBinding
+import com.example.myweather.service.models.CityInfo
 
 class SearchCityFragment : Fragment() {
 
@@ -28,22 +35,21 @@ class SearchCityFragment : Fragment() {
 
         val viewManager = LinearLayoutManager(context)
         val viewAdapter = SearchAdapter()
-        recyclerView = v.findViewById<RecyclerView>(R.id.search_city_recycle_view).apply {
+        recyclerView = v.findViewById<RecyclerView>(R.id.search_city_fragment_recycle_view).apply {
 //            setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
 
-//        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                    // Your piece of code on keyboard search click
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
+        val searchEditText = v.findViewById<EditText>(R.id.search_city_fragment_edit_text)
+        searchEditText.setOnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val text = textView.text
+                (recyclerView.adapter as SearchAdapter).setCities(viewModel.getCities(text.toString()))
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
 
         return v
     }
@@ -51,35 +57,39 @@ class SearchCityFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(SearchCityViewModel::class.java)
-//        (recyclerView.adapter as SearchAdapter).setCities(viewModel.getData())
-
     }
 
 
-    private class SearchHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private class SearchHolder(val itemBinding: SearchCityItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
 
+        fun bind(cityInfo: CityInfo) {
+            itemBinding.city = cityInfo
+        }
     }
 
     private class SearchAdapter : RecyclerView.Adapter<SearchHolder>() {
 
-        private var cities : List<String> = listOf()
+        private var cities : List<CityInfo> = listOf()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder {
-            val v : View =
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.search_city_item, parent, false)
+            val itemBinding = DataBindingUtil.inflate<SearchCityItemBinding>(
+                LayoutInflater.from(parent.context),
+                R.layout.search_city_item,
+                parent,
+                false,
+                MyBindingComponent()
+            )
 
-            return SearchHolder(v)
+            return SearchHolder(itemBinding)
         }
 
         override fun getItemCount() = cities.size
 
         override fun onBindViewHolder(holder: SearchHolder, position: Int) {
-            var textView : TextView = holder.itemView.findViewById(R.id.city_item_text)
-            textView.text = cities[position]
+            holder.bind(cities[position])
         }
 
-        fun setCities(data : List<String>) {
+        fun setCities(data : List<CityInfo>) {
             cities = data
             notifyDataSetChanged()
         }
